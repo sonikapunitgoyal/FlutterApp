@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:scoped_model/scoped_model.dart';
- //import 'package:flutter/rendering.dart';
+
 import 'package:map_view/map_view.dart';
 import './pages/auth.dart';
 import './pages/productadmin.dart';
@@ -11,9 +11,8 @@ import './scoped_models/main.dart';
 import './models/product.dart';
 import './widgets/helpers/custom_routers.dart';
 void main() {
-  // debugPaintSizeEnabled = true;
-  // debugPaintBaselinesEnabled = true;
-  // debugPaintPointersEnabled = true;
+  
+  
    MapView.setApiKey('AIzaSyBw0ETREFE5pzzwJLGBhKBam2HxSrPYVtM');
   runApp(MyApp());
 }
@@ -45,13 +44,13 @@ setState(() {
     return ScopedModel<MainModel>(
       model: _model,
       child: MaterialApp(
-        // debugShowMaterialGrid: true,
+        debugShowCheckedModeBanner: false,
         theme: ThemeData(
          
             primarySwatch: Colors.deepOrange,
             accentColor: Colors.deepPurple,
             buttonColor: Colors.deepPurple),
-        // home: AuthPage(),
+        
         routes: {
           '/': (BuildContext context) =>
               !_isAuthenticated? AuthPage() : ProductsPage(_model),

@@ -1,25 +1,19 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
-
 import 'package:map_view/map_view.dart';
 import 'package:http/http.dart' as http;
-
 import '../helpers/ensure_visible.dart';
 import '../../models/location.dart';
 import '../../models/product.dart';
-
 class LocationInput extends StatefulWidget {
   final Function setLocation;
   final Product product;
-
-  LocationInput(this.setLocation, this.product);
-
-  @override
+LocationInput(this.setLocation, this.product);
+ @override
   State<StatefulWidget> createState() {
     return _LocationInputState();
   }
 }
-
 class _LocationInputState extends State<LocationInput> {
   Uri _staticMapUri;
   LocationData _locationData;
@@ -30,18 +24,16 @@ class _LocationInputState extends State<LocationInput> {
   void initState() {
     _addressInputFocusNode.addListener(_updateLocation);
     if (widget.product != null) {
-      getStaticMap(widget.product.location.address, false);
+      getStaticMap(widget.product.location.address,geocode: false);
     }
     super.initState();
   }
-
-  @override
+@override
   void dispose() {
     _addressInputFocusNode.removeListener(_updateLocation);
     super.dispose();
   }
-
-  void getStaticMap(String address, [geocode = true]) async {
+void getStaticMap(String address,   {bool geocode = true, double lat, double lng}) async {
     if (address.isEmpty) {
       setState(() {
         _staticMapUri = null;
@@ -64,10 +56,13 @@ class _LocationInputState extends State<LocationInput> {
           address: formattedAddress,
           lattitude: coords['lat'],
           longitude: coords['lng']);
-    } else {
+    }  else if (lat == null && lng == null) {
       _locationData = widget.product.location;
+    } else {
+      _locationData =
+          LocationData(address: address, lattitude: lat, longitude: lng);
     }
-
+if(mounted){ 
     final StaticMapProvider staticMapViewProvider =
         StaticMapProvider('AIzaSyBw0ETREFE5pzzwJLGBhKBam2HxSrPYVtM');
     final Uri staticMapUri = staticMapViewProvider.getStaticUriWithMarkers([
@@ -79,10 +74,11 @@ class _LocationInputState extends State<LocationInput> {
         height: 300,
         maptype: StaticMapViewType.roadmap);
     widget.setLocation(_locationData);
-    setState(() {
+   setState(() {
       _addressInputController.text = _locationData.address;
       _staticMapUri = staticMapUri;
-    });
+    });}
+   
   }
 
   void _updateLocation() {

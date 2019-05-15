@@ -70,15 +70,15 @@ class ProductCard extends StatelessWidget {
             image: NetworkImage(product.image),
             height: 300.0,
             fit: BoxFit.cover,
-            placeholder: AssetImage('pictures/cat.jpg'),
+            placeholder: AssetImage('pictures/product.jpg'),
           ),),
           _buildTitlePriceRow(),
-          AddressElement('Union Square, San Francisco'),
+          AddressElement(product.location.address),
          
           _buildActionButtons(context)
         ],
       ),
     );
-    ;
+    
   }
 }

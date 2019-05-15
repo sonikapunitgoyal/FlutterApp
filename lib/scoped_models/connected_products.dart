@@ -64,7 +64,7 @@ mixin ProductsModel on ConnectedProductsModel {
       'title': title,
       'description': description,
       'image':
-          'http://www.bakersoven.in/assets/uploads/product/1536222148e.gif',
+          'https://amp.businessinsider.com/images/5a820844ec1ade54103f5578-960-720.jpg',
       'price': price,
       'userEmail': _authenticatedUser.email,
       'userId': _authenticatedUser.id,
@@ -101,11 +101,7 @@ mixin ProductsModel on ConnectedProductsModel {
       notifyListeners();
       return false;
     }
-    // .catchError((error) {
-    //   _isLoading = false;
-    //   notifyListeners();
-    //   return false;
-    // });
+   
   }
 
   Future<bool> updateProduct(
@@ -116,7 +112,7 @@ mixin ProductsModel on ConnectedProductsModel {
       'title': title,
       'description': description,
       'image':
-          'http://www.bakersoven.in/assets/uploads/product/1536222148e.gif',
+          'https://www.hul.co.in/Images/global-lady-browsing-unilever-products-990x557_tcm1255-521748_w970.jpg',
       'price': price,
        'loc_lat': locData.lattitude,
       'loc_lng': locData.longitude,
@@ -158,7 +154,7 @@ mixin ProductsModel on ConnectedProductsModel {
     notifyListeners();
     return http
         .delete(
-            'https://flutter-project-9e66f.firebaseio.com/products/${deletedProductId}.json?auth=${_authenticatedUser.token}')
+            'https://flutter-project-9e66f.firebaseio.com/products/$deletedProductId.json?auth=${_authenticatedUser.token}')
         .then((http.Response response) {
       _isLoading = false;
       notifyListeners();

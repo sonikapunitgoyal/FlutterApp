@@ -18,22 +18,28 @@ class _AuthPageState extends State<AuthPage> with TickerProviderStateMixin {
     'acceptTerms': false
   };
   final _formKey = GlobalKey<FormState>();
-  final TextEditingController _passwordController=TextEditingController();
-  AuthMode _authMode=AuthMode.Login;
+  final TextEditingController _passwordController = TextEditingController();
+  AuthMode _authMode = AuthMode.Login;
   AnimationController _controller;
   Animation<Offset> _slideTrasition;
- void initState(){
-   _controller=AnimationController(vsync: this,duration: Duration(milliseconds: 200));
-   _slideTrasition= Tween<Offset>(begin: Offset(0.0, -2.0),end: Offset.zero).animate(CurvedAnimation( parent: _controller,curve:Curves.fastOutSlowIn));
-super.initState();
+
+  void initState() {
+    _controller =
+        AnimationController(vsync: this, duration: Duration(milliseconds: 200));
+    _slideTrasition = Tween<Offset>(begin: Offset(0.0, -2.0), end: Offset.zero)
+        .animate(
+            CurvedAnimation(parent: _controller, curve: Curves.fastOutSlowIn));
+    super.initState();
   }
+
   DecorationImage _buildBackgroundImage() {
     return DecorationImage(
+      colorFilter:
+          ColorFilter.mode(Colors.black.withOpacity(0.7), BlendMode.dstATop),
       image: AssetImage(
         'pictures/key.jpg',
       ),
       fit: BoxFit.fill,
-     
     );
   }
 
@@ -62,7 +68,8 @@ super.initState();
           labelText: 'Password',
           icon: Icon(Icons.lock),
           filled: true,
-          fillColor: Colors.blueGrey[200]),controller: _passwordController,
+          fillColor: Colors.blueGrey[200]),
+      controller: _passwordController,
       onSaved: (String value) {
         _formData['password'] = value;
       },
@@ -73,22 +80,27 @@ super.initState();
       },
     );
   }
-   Widget _buildConfirmPasswordTextField() {
 
-    return FadeTransition(opacity: CurvedAnimation(parent: _controller,curve: Curves.easeIn), child: SlideTransition(position: _slideTrasition, child:  TextFormField(
-      decoration: InputDecoration(
-          labelText: 'Confirm Password',
-          icon: Icon(Icons.lock),
-          filled: true,
-          fillColor: Colors.blueGrey[200]),
+  Widget _buildConfirmPasswordTextField() {
+    return FadeTransition(
+      opacity: CurvedAnimation(parent: _controller, curve: Curves.easeIn),
+      child: SlideTransition(
+        position: _slideTrasition,
+        child: TextFormField(
+          decoration: InputDecoration(
+              labelText: 'Confirm Password',
+              icon: Icon(Icons.lock),
+              filled: true,
+              fillColor: Colors.blueGrey[200]),
           obscureText: true,
-     
-      validator: (String value ) {
-        if (_passwordController.text!=value && _authMode==AuthMode.Signup) {
-          return 'password dont match';
-        }
-      },
-    ),),
+          validator: (String value) {
+            if (_passwordController.text != value &&
+                _authMode == AuthMode.Signup) {
+              return 'password dont match';
+            }
+          },
+        ),
+      ),
     );
   }
 
@@ -105,37 +117,34 @@ super.initState();
   }
 
   void _submitForm(Function authenticate) async {
-    
     if (!_formKey.currentState.validate() || !_formData['acceptTerms']) {
       return;
     }
     _formKey.currentState.save();
-     Map<String, dynamic> successInformation;
-   
-     successInformation =
-          await  authenticate(_formData['email'], _formData['password'],_authMode);
-    
-    
-      if (successInformation['success']) {
-        //Navigator.pushReplacementNamed(context, '/');
-      } else {
-        showDialog(
-            context: context,
-            builder: (BuildContext context) {
-              return AlertDialog(
-                title: Text('An Error Occurred!'),
-                content: Text(successInformation['message']),
-                actions: <Widget>[
-                  FlatButton(
-                    child: Text('Okay'),
-                    onPressed: () {
-                      Navigator.of(context).pop();
-                    },
-                  )
-                ],
-              );
-            });
-      
+    Map<String, dynamic> successInformation;
+
+    successInformation = await authenticate(
+        _formData['email'], _formData['password'], _authMode);
+
+    if (successInformation['success']) {
+      //Navigator.pushReplacementNamed(context, '/');
+    } else {
+      showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              title: Text('An Error Occurred!'),
+              content: Text(successInformation['message']),
+              actions: <Widget>[
+                FlatButton(
+                  child: Text('Okay'),
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                )
+              ],
+            );
+          });
     }
   }
 
@@ -169,46 +178,53 @@ super.initState();
                         height: 10.0,
                       ),
                       _buildPasswordTextField(),
-                       SizedBox(
+                      SizedBox(
                         height: 10.0,
                       ),
-                   _buildConfirmPasswordTextField(),
+                      _buildConfirmPasswordTextField(),
                       _buildAcceptTerms(),
                       SizedBox(
                         height: 10.0,
                       ),
-                      FlatButton(child: Text('switch to ${_authMode==AuthMode.Login? 'signup' : 'login'}'), 
-                     onPressed: (){setState(() {
-                       if (_authMode==AuthMode.Login){
-                         setState(() {
-                           _authMode=AuthMode.Signup;
-                         });
-                         _controller.forward();
-                       }else{
-                         setState(() {
-                                    _authMode=AuthMode.Login;
-
-                         });
-                         _controller.reverse();
-                       }
-                     });
-                      
-                     },
-                         ),
+                      FlatButton(
+                        child: Text(
+                            'switch to ${_authMode == AuthMode.Login ? 'signup' : 'login'}'),
+                        onPressed: () {
+                          setState(() {
+                            if (_authMode == AuthMode.Login) {
+                              setState(() {
+                                _authMode = AuthMode.Signup;
+                              });
+                              _controller.forward();
+                            } else {
+                              setState(() {
+                                _authMode = AuthMode.Login;
+                              });
+                              _controller.reverse();
+                            }
+                          });
+                        },
+                      ),
                       SizedBox(
                         height: 10.0,
                       ),
-                     
-                    ScopedModelDescendant<MainModel>(builder: (BuildContext context ,Widget child,MainModel model)
-                    {return model.isLoading?CircularProgressIndicator():
-                    RaisedButton(
-                        color: Theme.of(context).primaryColor,
-                        textColor: Colors.white,
-                        child: Text(_authMode==AuthMode.Login?
-                          'Login':'Signup'
-                        ),
-                        onPressed:()=> _submitForm(model.authenticate),
-                      );},)  ,
+                      ScopedModelDescendant<MainModel>(
+                        builder: (BuildContext context, Widget child,
+                            MainModel model) {
+                          return model.isLoading
+                              ? CircularProgressIndicator()
+                              : RaisedButton(
+                                  color: Theme.of(context).primaryColor,
+                                  textColor: Colors.white,
+                                  child: Text(_authMode == AuthMode.Login
+                                      ? 'Login'
+                                      : 'Signup'),
+                                  onPressed: () =>
+                                      _submitForm(model.authenticate),
+                                );
+
+                        },
+                      ),
                     ]),
                   ),
                 ),

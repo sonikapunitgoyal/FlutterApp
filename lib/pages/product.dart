@@ -2,23 +2,21 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 
-
 import '../widgets/products/product_fab.dart';
 import '../widgets/ui_elements/title.dart';
 import '../models/product.dart';
-
 
 class ProductPage extends StatelessWidget {
   final Product product;
 
   ProductPage(this.product);
 
-  Widget _buildAddressPriceRow(double price) {
+  Widget _buildAddressPriceRow(String address, double price) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: <Widget>[
         Text(
-          'Union Square, San Francisco',
+          address,
           style: TextStyle(fontFamily: 'Oswald', color: Colors.grey),
         ),
         Container(
@@ -48,34 +46,44 @@ class ProductPage extends StatelessWidget {
         //  appBar: AppBar(
         //   title: Text(product.title),
         // ),
-        body:CustomScrollView(slivers: <Widget>[
-          SliverAppBar(expandedHeight: 256.0,  
-          pinned: true,flexibleSpace: FlexibleSpaceBar(title: Text(product.title)
-          ,background:Hero(tag: product.id,child:
-            FadeInImage(
-            image: NetworkImage(product.image),
-            height: 300.0,
-            fit: BoxFit.cover,
-            placeholder: AssetImage('pictures/cat.jpg'),
-          ),
-          ) ,
-          ),
-          ),SliverList(delegate: SliverChildListDelegate(
-            [Container(
-              padding: EdgeInsets.all(10.0),
-              alignment: Alignment.center,
-              child: TitleDefault(product.title),
-            ),
-            _buildAddressPriceRow(product.price),
-            Container(
-              padding: EdgeInsets.all(10.0),
-              child: Text(
-                product.description,
-                textAlign: TextAlign.center,
+        body: CustomScrollView(
+          slivers: <Widget>[
+            SliverAppBar(
+              expandedHeight: 256.0,
+              pinned: true,
+              flexibleSpace: FlexibleSpaceBar(
+                title: Text(product.title),
+                background: Hero(
+                  tag: product.id,
+                  child: FadeInImage(
+                    image: NetworkImage(product.image),
+                    height: 300.0,
+                    fit: BoxFit.cover,
+                    placeholder: AssetImage('pictures/product.jpg'),
+                  ),
+                ),
               ),
-            )]),)
-        ],),
-        floatingActionButton:ProductFAB(product),
+            ),
+            SliverList(
+              delegate: SliverChildListDelegate([
+                Container(
+                  padding: EdgeInsets.all(10.0),
+                  alignment: Alignment.center,
+                  child: TitleDefault(product.title),
+                ),
+                _buildAddressPriceRow(product.location.address, product.price),
+                Container(
+                  padding: EdgeInsets.all(10.0),
+                  child: Text(
+                    product.description,
+                    textAlign: TextAlign.center,
+                  ),
+                )
+              ]),
+            )
+          ],
+        ),
+        floatingActionButton: ProductFAB(product),
       ),
     );
   }

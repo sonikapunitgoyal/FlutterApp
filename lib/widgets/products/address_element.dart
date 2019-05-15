@@ -14,7 +14,9 @@ class AddressElement extends StatelessWidget {
           border: Border.all(color: Colors.grey,
            width: 1.0),
           borderRadius: BorderRadius.circular(4.0)),
-      child: Text(address),
+      child:Flexible(
+    fit: FlexFit.loose,child: Text(address, softWrap: false,
+      overflow: TextOverflow.fade,),)
     );
   }
 }
